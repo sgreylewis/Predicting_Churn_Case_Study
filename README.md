@@ -68,21 +68,21 @@ members weremuch more likely to use it only during the weekdays or only during t
 we figured they might be inactive since they only used it when other transportation
 was not available.   
 
-![Violin Plots of Features](images/violin_plots_active_inactive.png)
+![Violin Plots of Features](images/violin_plots_active_inactive1.png)
 
 With the categorical countplots we figured that our company might want
 to reach out to Android users because of their little use.  
 
-![Count Plot for iPhone versus Android](images/count_plots_iphone.png)
+![Count Plot for iPhone versus Android](images/count_plots_iphone1.png)
 
 We also want to know what's going on in King's Landing that makes their population
 so active.  
 
-![Count Plot Depending on City](images/count_plots_city.png)
+![Count Plot Depending on City](images/count_plots_city1.png)
 
 For luxury car use, we might want to incentivize luxury car users.
 
-![Count Plot Depending on Luxury Usage](images/count_plots_luxury_car.png)
+![Count Plot Depending on Luxury Usage](images/count_plots_luxury_car1.png)
 
 ## Methods <a name="methods"></a>
 
