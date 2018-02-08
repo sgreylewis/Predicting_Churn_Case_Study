@@ -5,10 +5,11 @@
 2. [Data](#data)
 3. [Feature Engineering](#feature_engineering)
 4. [Exploratory Data Analysis](#EDA)
-5. [Recommender Methods](#methods)
-6. [Feature Importance](#featureimportance)
+5. [Feature Importance](#featureimportance)
+6. [Methods](#methods)
 7. [Future Direction](#futuredirection)
 8. [References](#references)
+
 
 
 ## Motivation <a name="motivation"></a>
@@ -19,6 +20,7 @@ customer retention for a ride-sharing company using their data on users
 provided over a six month period.  Using the model, I was tasked with determining
 which features were most influential in loss of retention and then making a plan
 for how the company could use this information to increase retention.
+
 
 
 ## Data <a name="data"></a>
@@ -38,6 +40,7 @@ Here is a detailed description of the data received on each user:
 * `weekday_pct`: the percent of the user’s trips occurring during a weekday
 
 
+
 ## Feature Engineering <a name="feature_engineering"></a>
 
 The data was pulled on July 1, 2014; it captures a six month period for users who
@@ -48,6 +51,14 @@ pulled; otherwise, the user is considered inactive, and not retained as a custom
 Since I will be building a model to predict retention, I first had to create a column
 for our target variable of retention that indicated whether or not a customer was
 active based on if their last trip date was before or after June 1st, 2014.  
+
+We found there were a large number of nulls, especially in the rating columns, which
+makes sense considering riders are not required to rate their drivers.  We decided
+to fill them using MICE, from the fancyimpute library; MICE is an iterative algorithm
+based on chained equations that uses an imputation model specified separately for
+each variable and involving the other variables and predictors.  MICE has shown to
+be a better method for filling nulls than just replacing the nulls with the mean.
+
 
 
 ## Exploratory Data Analysis through Visualizations <a name="EDA"></a>
@@ -87,9 +98,57 @@ while 70% of the users who were not luxury car users are now inactive.
 ![Count Plot Depending on Luxury Usage](images/count_plots_luxury_car1.png)
 
 
-## Methods <a name="methods"></a>
 
 ## Feature Importance <a name="featureimportance"></a>
+
+To get an idea of which features are most important, I fit the data to a Random
+Forest Classifier model, and used the feature importance method on my model to find
+that the top five most important features in determining whether or not a user was
+active in the last 30 days were:
+
+1. Average Distance Traveled
+2. Average Rating by Driver
+3. Signup Date
+4. Average Rating of Driver
+5. City
+
+Looking back at the exploratory data analysis, we saw that for the most part active
+users had a lower average distance than non-active users, and that active users
+overall had lower ratings both by the driver and for the driver.  While we wouldn't
+expect these to be characteristics of an active user, we did see from the graphs
+that they are defining characteristics of the average user; therefore it makes sense
+that these features are most influential in determining if a user is active or
+not active.
+
+![Feature Importance](images/feature_importance.png)
+
+
+
+## Methods <a name="methods"></a>
+
+To determine the best method, we decided to check the average cross validation scores
+on many popular classification algorithms that we thought would be relevant considering
+the data. We got the average cross validation accuracy scores of:
+
+Model | Accuracy | Std
+--- | --- | ---
+*XGB Classifier* | 0.792 | 0.006
+*Linear SVC* | 0.728 | 0.006
+*Gradient Boosting* | 0.791 | 0.006
+*Logistic Regression* | 0.727 | 0.005
+*KNN* | 0.762 | 0.006
+*Decision Tree* | 0.708 | 0.006
+*Naive Bayes* | 0.706 | 0.006
+*Random Forest* | 0.760 | 0.006
+
+The XGB Classifier shows to have the highest average accuracy so we will continue
+with the XGB Classifier as our model; we also like the XGB Classifier since it includes
+regression penalties for features that don't have much of an effect.  To make our
+model even better, we will look at how changing hyper-parameters could improve our model.  
+We did a grid-search to determine our best hyper-parameters for the XGB Classifier,
+which then resulted in an accuracy score of 79.6%.
+
+
 
 ## Future Direction <a name="futuredirection"></a>
 
