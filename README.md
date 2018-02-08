@@ -46,43 +46,46 @@ if they used the ride-sharing company anytime in the 30 days before the data was
 pulled; otherwise, the user is considered inactive, and not retained as a customer.  
 
 Since I will be building a model to predict retention, I first had to create a column
-for our target variable. To create our target variable, I had to change the date
-strings to datetime types, and then create a column that indicated whether or not
-a customer had churned based on if their last trip date was before or after June
-1st 2014, which is 30 days prior to the gathering of the data.  
+for our target variable of retention that indicated whether or not a customer was
+active based on if their last trip date was before or after June 1st, 2014.  
 
 
-## Exploratory Data Analysis through Visualizations and Maps <a name="EDA"></a>
+## Exploratory Data Analysis through Visualizations <a name="EDA"></a>
 
 I knew that visualizing the data would help me to find patterns amongst the features.
-Using seaborn, I created violin plots that tell us that there are more outliers
-in the active population for distance traveled.  These users most likely stay active
-because they can use the ride-sharing company when on a business trip that requires
-the user to fly into a distant airport.  We also saw that the inactive members are
-not necessarily inactive because of a dissatisfaction with their driver or a
-poor rating by their driver.  There are more outliers in the inactive for avg_surge,
-which goes to show maybe they only used it in a bind, while active users are more likely
-to use the company during a surge. Active members use the service often, especially
-the outliers, who took 120 trips in the first 30 days. We noticed that inactive
-members weremuch more likely to use it only during the weekdays or only during the weekends;
-we figured they might be inactive since they only used it when other transportation
-was not available.   
+The first violin plot in the diagram below tells us that there are more outliers in the active population for average distance traveled; these users potentially
+stay active because they can use the ride-sharing company when on a business trip
+that requires the user to fly into a distant airport.  In the second and third plots,
+you can see that the inactive members are not necessarily inactive because of a dissatisfaction with their driver or a poor rating by their driver.  In the fourth
+plot, there are more outliers amongst the inactive users for avg_surge(the average
+surge level ridden duing a surge time); this suggests those customers only used
+it in a bind, as most active users avoid riding when there's a high surge;
+still the fifth plot shows that active users on average had a higher
+percentage of surge rides than inactive users.  The sixth plot tells us that the
+active members use the service often, especially the outliers, who took 120 trips
+in the first 30 days. In the seventh plot, I noticed that inactive members were much more likely to use it only during the weekdays or only during the weekends; one can imagine that they might be inactive since they only used it when other transportation was not available.   
 
 ![Violin Plots of Features](images/violin_plots_active_inactive1.png)
 
-With the categorical countplots we figured that our company might want
-to reach out to Android users because of their little use.  
+
+You can see in the countplot below, the population of people using the service mostly have iPhones; Android users aren't using the service either because it's not easy
+to access on an Android, not well marketed to Android users, or simply because more people have iPhones than Androids.  
 
 ![Count Plot for iPhone versus Android](images/count_plots_iphone1.png)
 
-We also want to know what's going on in King's Landing that makes their population
-so active.  
+
+The real names of the cities in our data were replaced in order to conceal identity; still you can see from the countplot below that King's Landing is having much greater success in retaining its users than Astapor and Winterfell, even though the latter cities had many more users over the past six months.  To better understand why Astapor only retained about 25% of their customers from the past six months, we'd need take
+a closer look at the demographics of Astapor and the ride-sharing marketing strategies
+ in that city compared to King's Landing.  
 
 ![Count Plot Depending on City](images/count_plots_city1.png)
 
-For luxury car use, we might want to incentivize luxury car users.
+
+The plot below shows that half of the users who were luxury car users are now inactive,
+while 70% of the users who were not luxury car users are now inactive.
 
 ![Count Plot Depending on Luxury Usage](images/count_plots_luxury_car1.png)
+
 
 ## Methods <a name="methods"></a>
 
