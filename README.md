@@ -140,10 +140,10 @@ to consider the context of the problem in terms of what we stand to lose with ou
 correct and incorrect predictions.  In this case, a confusion matrix would contain
 the following:
 
-* TP - correctly predicting that a user was active
-* FP - incorrectly predicting that a user was active
-* TN - correctly predicting that a user is not active
-* FN - incorrectly predicting that a user is not active
+* True Positives - correctly predicting that a user was active
+* False Positives - incorrectly predicting that a user was active
+* True Negatives - correctly predicting that a user is not active
+* False Negatives - incorrectly predicting that a user is not active
 
 We want to correctly predict that a user is inactive so that we can provide them
 with incentives so that they don't leave.  Now if we incorrectly predict that a
