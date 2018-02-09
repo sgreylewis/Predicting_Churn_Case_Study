@@ -216,4 +216,4 @@ whether a user is active or not to see how much this affects our true negative r
 
 ## References <a name="references"></a>
 
-I am thankful to my classmates Tyler Atkinson, Daniel Meurer, and Luke Baker, who were my teammates during this case study.   
+I am thankful to Tyler Atkinson, Daniel Meurer, and Luke Baker, who were my teammates during this case study.   
