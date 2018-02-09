@@ -7,8 +7,9 @@
 4. [Exploratory Data Analysis](#EDA)
 5. [Feature Importance](#featureimportance)
 6. [Methods](#methods)
-7. [Future Direction](#futuredirection)
-8. [References](#references)
+7. [Plans to Increase Retention](#increaseretention)
+8. [Future Direction](#futuredirection)
+9. [References](#references)
 
 
 
@@ -107,18 +108,21 @@ that the top five most important features in determining whether or not a user w
 active in the last 30 days were:
 
 1. Average Distance Traveled
-2. Average Rating by Driver
-3. Signup Date
-4. Average Rating of Driver
-5. City
+2. Weekday Percent
+3. Average Rating of Driver
+4. Average Rating by Driver
+5. Surge Percent
 
 Looking back at the exploratory data analysis, we saw that for the most part active
-users had a lower average distance than non-active users, and that active users
-overall had lower ratings both by the driver and for the driver.  While we wouldn't
-expect these to be characteristics of an active user, we did see from the graphs
-that they are defining characteristics of the average user; therefore it makes sense
-that these features are most influential in determining if a user is active or
-not active.
+users had a lower average distance than non-active users, less predictable weekday
+usage than non-users, and that active users overall had lower ratings both by the
+driver and for the driver.  While we wouldn't expect these to be characteristics
+of an active user, we did see from the graphs that they are defining characteristics
+of the average user; therefore it makes sense that these features are most influential
+in determining if a user is active or not active.
+
+You can see in the graph below that average distance traveled is by far the most
+influential feature in determining retention for a customer.
 
 ![Feature Importance](images/feature_importance.png)
 
@@ -126,40 +130,90 @@ not active.
 
 ## Methods <a name="methods"></a>
 
-To determine the best method, we decided to check the average cross validation scores
+To determine the model that would best predict whether a user was currently active
+or non-active, we decided to check the average cross validation scores
 on many popular classification algorithms that we thought would be relevant considering
-the data. We got the average cross validation accuracy scores of:
+the data.
+
+To determine the scoring metric upon which we will evaluate our models, one has
+to consider the context of the problem in terms of what we stand to lose with our
+correct and incorrect predictions.  In this case, a confusion matrix would contain
+the following:
+
+* TP - correctly predicting that a user was active
+* FP - incorrectly predicting that a user was active
+* TN - correctly predicting that a user is not active
+* FN - incorrectly predicting that a user is not active
+
+We want to correctly predict that a user is inactive so that we can provide them
+with incentives so that they don't leave.  Now if we incorrectly predict that a
+user will become inactive, we may waste money providing incentives to a customer
+that was going to stay active anyway, but that would not cost as much money as
+incorrectly predicting that a user was active, and therefore unknowingly losing
+their business without having a chance to first woo them with incentives.  In
+conclusion, we want to maximize our prediction of true negatives, since these are
+the people we will be targeting with incentives, and we want to minimize our false
+positives, since these are the people who would leave without us having the chance
+to offer incentives; therefore we want a high true negative rate(the ratio of true
+negatives to all negatives) and a low false positive rate(the ratio of false positives
+to all negatives).  
+
+The scoring metric that best measures the true negative rate and false positive
+rate is the 'roc_auc_score', which is a measurement of the area of the ROC(receiver
+operating characteristic) curve.  The ROC curve is created by plotting the true
+positive rate against the false positive rate at various threshold settings.  
+
+We got the average cross validation roc_auc scores of:
+
+Model | ROC_AUC | Std
+--- | --- | ---
+*XGB Classifier* | 0.856 | 0.005
+*Linear SVC* | 0.769 | 0.005
+*Logistic Regression* | 0.769 | 0.005
+*KNN* | 0.812 | 0.005
+*Decision Tree* | 0.686 | 0.006
+*Naive Bayes* | 0.773 | 0.006
+*Random Forest* | 0.810 | 0.007
+
+
+We also got the average cross validation accuracy scores of:
 
 Model | Accuracy | Std
 --- | --- | ---
 *XGB Classifier* | 0.792 | 0.006
 *Linear SVC* | 0.728 | 0.006
-*Gradient Boosting* | 0.791 | 0.006
 *Logistic Regression* | 0.727 | 0.005
 *KNN* | 0.762 | 0.006
 *Decision Tree* | 0.708 | 0.006
 *Naive Bayes* | 0.706 | 0.006
 *Random Forest* | 0.760 | 0.006
 
-The XGB Classifier shows to have the highest average accuracy so we will continue
-with the XGB Classifier as our model; we also like the XGB Classifier since it includes
-regression penalties for features that don't have much of an effect.  To make our
-model even better, we will look at how changing hyper-parameters could improve our model.  
-We did a grid-search to determine our best hyper-parameters for the XGB Classifier,
-which then resulted in an accuracy score of 79.6%.
+The XGB Classifier shows to have the highest average accuracy and area under the
+ROC curve so we will continue with the XGB Classifier as our model; we also like the XGB Classifier since it includes regression penalties for features that don't have much of an effect.  To make our model even better, we will look at how changing hyper-parameters could improve our model.  We did a grid-search to determine our best hyper-parameters for the XGB Classifier, which then resulted in an roc_auc score of 86.0% and an accuracy score of 79.6%.
 
+## Plans to Increase Retention <a name="increaseretention"></a>
+
+In order to increase our retention rate of users, we must provide incentives to those
+users who we predict will become inactive based on our model.  If the average distance
+was the most important feature in determining an active user, can we offer a flat
+fee for long distances to our users at risk of becoming inactive?  We did see a
+larger distribution of inactive users traveled longer distances than the active users(except for the outliers); these inactive users maybe only use the service every few months when traveling to the airport.  We could provide a flat fee for those distances or even smaller distances
+so that the services are used more.  We also saw that unlike active users, inactive users seem to have used the service exclusively on the weekdays or exclusively on the weekends.  We could provide incentives to these users for cheaper fares during the times in the week that
+they are most likely to use the service so that they choose our ride-sharing company
+over another alternative mode of transportation.
+
+The impacts of implementing these services would best be determined using a cost-benefit
+analysis of how much we might gain when we retain our customers versus how much we might lose if we don't retain them, or if we provide too many incentive programs.  
 
 
 ## Future Direction <a name="futuredirection"></a>
 
-- A presentation including the following points:
-  - How did you compute the target?
-  - What model did you use in the end? Why?
-  - Alternative models you considered? Why are they not good enough?
-  - What performance metric did you use to evaluate the *model*? Why?
-  - Based on insights from the model, what actionable plans do you propose to
-    reduce churn?
-  - What are the potential impacts of implementing these plans or decisions?
-    What performance metrics did you use to evaluate these *decisions*, why?
+For future analysis for this project, I plan to do a cost benefit analysis in order to determine
+just how much profit we will gain by implementing our strategies to increase retention.  
+I would also like to experiment with changing the threshold value for which we determine
+whether a user is active or not to see how much this affects our true negative rate and false positive rate.
+
 
 ## References <a name="references"></a>
+
+I am thankful to my classmates Tyler Atkinson, Daniel Meurer, and Luke Baker, who were my teammates during this case study.   
